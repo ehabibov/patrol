@@ -421,18 +421,25 @@ class PatrolTester {
     Duration duration = const Duration(milliseconds: 50),
     bool? andSettle,
   }) {
+    print(
+      'DEBUG dragging until finder $finder becomes visible in scrollable $view',
+    );
     return TestAsyncUtils.guard(() async {
+      print('DEBUG here1');
       var viewPatrolFinder = PatrolFinder(finder: view, tester: this);
       await viewPatrolFinder.waitUntilVisible();
       viewPatrolFinder = viewPatrolFinder.first;
+      print('DEBUG here2');
 
       var iterationsLeft = maxIteration;
       while (iterationsLeft > 0 && finder.hitTestable().evaluate().isEmpty) {
+        print('DEBUG dragging, iterations left: $iterationsLeft');
         await tester.drag(viewPatrolFinder, moveStep);
         await tester.pump(duration);
         iterationsLeft -= 1;
       }
       await Scrollable.ensureVisible(tester.firstElement(finder));
+      print('DEBUG here3');
 
       await _performPump(
         andSettle: andSettle,
@@ -513,6 +520,7 @@ class PatrolTester {
     Duration duration = const Duration(milliseconds: 50),
     bool? andSettle,
   }) async {
+    print('DEBUG scrolling until $finder is visible in scrollable $scrollable');
     assert(maxScrolls > 0, 'maxScrolls must be positive number');
     scrollable ??= find.byType(Scrollable);
 
